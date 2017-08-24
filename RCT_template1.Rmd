@@ -1,0 +1,182 @@
+---
+title: "Trial Name"
+author: '[FirstName LastName](mailto:email@address)'
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  html_document:
+    number_sections: yes
+    code_folding: hide
+    theme: flatly
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+subtitle: "Kenya 2017LR PI RCT"
+---
+
+```{r setup}
+#### set up
+## clear environment and console
+rm(list = ls())
+cat("\014")
+
+## set up some global options
+# define all knitr tables to be html format
+options(knitr.table.format = 'html')
+
+# change code chunk default to not show warnings or messages
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+## load libraries
+# dplyr and tibble are for working with tables
+# reshape is for easy table transformation
+# knitr is to make pretty tables at the end
+# ggplot2 is for making graphs
+# readxl is for reading in Excel files
+library(dplyr, quietly = T, warn.conflicts = F, verbose = F)
+library(reshape2, quietly = T)
+library(knitr, quietly = T)
+library(ggplot2, quietly = T)
+library(tibble, quietly = T)
+library(readxl, quietly = T)
+
+#### define helpful functions
+# define function that turns decimal percentages into pretty formats
+format_pct <- function(num) {round(num*100, digits = 2)}
+
+# define function to adjust table widths
+html_table_width <- function(kable_output, width){
+  width_html <- paste0(paste0('<col width="', width, '">'), collapse = "\n")
+  sub("<table>", paste0("<table>\n", width_html), kable_output)
+}
+
+
+
+
+```
+
+## Context
+trial overview paragraph and  include link to the full trial analysis overview doc provided by PI.
+
+## Main takeaways
+This is where we'll have a bulleted list of the key takeaways and implications from the RCT (we put this at the top so it is easy to find, even though we won't know the answer until after the analysis). 
+
+* Takeaway 1
+
+* Takeaway 2
+
+* Takeaway 3
+
+## Data Prep
+
+Here, walk through merging and summarizing data, dealing with outliers, and outline any problems with the dataset. We'll also explain where our data comes from.
+
+```{r prep1}
+
+set.seed(101)
+#lets make some fake data which is normal
+norm1 <- rnorm(n=100, mean=10,sd=2) # this will make normal data that is 100 elements long, with a mean of 10 and a StDev of 2
+
+
+
+```
+
+This is also where we will describe any new features we have created. 
+
+## Data exploration
+
+Here we can show some simple distributions for our data. 
+
+```{r expl1}
+
+#simple histogram
+hist(norm1, main="Simple histogram of data")
+
+#fancy histogram
+ggplot() + geom_histogram(aes(x=norm1)) + ggtitle("Fancy histogram of data") + xlab("values")
+```
+
+For each outcome, show a summary that makes sense for the variable, e.g. a histogram or boxplot.
+
+### Key Outcome Variable 1: _________
+### Key Outcome Variable 2: _________
+### Secondary Outcome Variable 1: _________
+
+## Power Analysis
+
+Here is the result of our power analysis on variable 1.
+
+``` {r tx_all}
+
+# below is some example code 
+# formatted results
+
+cohen_d <- function(d1,d2) {  
+  m1 <- mean(d1, na.rm=TRUE)
+  m2 <- mean(d2, na.rm=TRUE)
+  s1 <- sd(d1, na.rm=TRUE)
+  s2 <- sd(d2, na.rm=TRUE)
+  spo <- sqrt((s1**2 + s2**2)/2)
+  d <- (m1 - m2)/spo
+  effsi <- d / sqrt((d**2)+4)
+  ret <- list("d" = d, "effectsi" = effsi)
+  return(ret)  } 
+
+
+
+#Now lets calculate and effect size:
+
+vals <- cohen_d(norm1, norm2)
+
+
+#we will call the effect size like this:
+
+#now, if we want to calculate a sample size, we will do it like this:
+
+
+library(pwr)
+#we can give this function all arguments except the ONE we want to know
+# so if we want to know sample size then we set n=NULL
+# if we want to know power then we tell it the sample size but set power=NULL
+#see that this gives us the n we need (n is sample size) is this example we need a sampple size of around 260 per group (so 270 for control AND 270 for treatment) to have a power of 0.8 when we assume the 10% increase in yield
+
+#but what if I only am able to use 200 sites? what will my power be?
+
+pwr.2p.test(h=vals$effectsi, n = NULL, power=0.8, sig.level=0.05)
+
+#store answer 
+power_val = pwr.2p.test(h=vals$effectsi, n = 100, power=NULL, sig.level=0.05)$power
+
+
+```
+
+
+
+Here is how to show R2 inline: `r round(power_val,2)` is our power.
+
+## Hypothesis testing
+
+Here we will put our hypothesis testing results. 
+
+
+```{r hypo1}
+
+t.test(norm1, norm2, paired=FALSE, var.equal = FALSE)
+h_val1 <- t.test(norm1, norm2, paired=FALSE, var.equal = FALSE)$p.value
+
+```
+
+Hypothesis 1, p-value of `r round(h_val1,2)`
+
+
+> We will add other sections that are important in our future lessons! E.g. regression analysis. 
+
+# Methods
+
+If you have used any unusual methods then you can write about them here (more info after our regression lesson).
+
+# Appendix
+
+Here we will put any technical plots. This will ensure that the flow of the document is uninterrupted, whilst still making sure it is clear what we have done
+
+
+

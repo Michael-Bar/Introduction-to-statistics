@@ -1,0 +1,39 @@
+---
+title: "TITLE "
+author: 'NAME'
+date: "DATE"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
+    toc_depth: 6
+subtitle: Understanding distributions for RCT analysis
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2) # this is a nice plotting package we will use
+library(cowplot) # this gives us extra options when plotting 
+
+
+
+```
+
+# TITLE 1
+
+## TITLE 2
+
+### TITLE 3
+
+```{r name1}
+
+print(4+4)
+```
+
+More text is written here. 
