@@ -25,21 +25,23 @@ library(cowplot) # this gives us extra options when plotting
 ```
 
 
-# AMP lesson: RCT principles
+# Overview
 
-
-## Lesson objectives:
-
-
-### Motivation:
+<!---
+Set code folding to show because you want them to see the code and interact with it
+--->
 
 The randomized controlled trial (RCT) is a key tool for any analyst, what separates the RCT from other statistical tools is its ability to define causality. Whereas most statistical techniques can only tell us about *correlations*, the RCT can tell us about *causations*, i.e. whether A causes B, or B causes A. As such, the RCT is central to proving what does and does not work for our farmers.
 
 This lesson will outline the design principles of RCTs, you should consult this lesson before every RCT to ensure you have considered each and every aspect of an effective and cost-efficient RCT. Later lessons will deal with how to analyse RCT results. Note that not all trials will be a full-fledged RCT, there will also be simpler trials run in earlier phases to obtain estimates of logistical feasibility and impact (etc). These are described  [here ](https://docs.google.com/presentation/d/14CpKbrEtFOzPfYTmfwKZgnpmANYbKC8YmX1ZxTRZsQs/edit#slide=id.g204cb16ee8_0_0). 
 
-### Objectives:
+## Objectives:
 
-After this lesson you should know which steps to take when designing an RCT and the order to follow them, you should also be able to judge whether an RCT is feasible given constraints on sample sizes and measurement strategies. 
+After this lesson you should: 
+
+* Know steps to take when designing an RCT and the order to follow them
+
+* Be able to judge whether an RCT is feasible given constraints on sample sizes and measurement strategies. 
 
 We will break an RCT into it's parts (hypothesis, randomization, and measurement) and examine what is required from each part to make an effective RCT.
 
@@ -62,33 +64,41 @@ We will break an RCT into it's parts (hypothesis, randomization, and measurement
 * **Control group**: Those individuals or clusters that have been assigned to not receive an intervention
 
 
-## Principles of Randomised controlled trials
+# Principles of RCTs
+
+<!---
+What are you trying to accomplish with this section? I don't think these terms will make sense the first time through for readers and you don't then bring them back in the randdomization section. I suggest combining these sections and motivating it from the perspective of an OAF analyst who has an impact question they're trying to answer. That question leads us to "how do we measure that impact" and why we can't just let farmers self-select into our study groups, etc. That should give you a path to introduce all of those topics.
+-->
 
 Each RCT will have some shared elements:
 
-* **Randomization**: The random assignment of individuals or groups to a treatment or control group
+* [**Hypothesis**](#hypotheses): A proposition (or statement) to evaluate.
 
-* **Hypothesis**: A proposition (or statement) to evaluate.
+* [**Randomization**](#randomisation-in-rcts): The random assignment of individuals or groups to a treatment or control group
 
 * **A control group**: a randomly selected group assigned to *not* receive the intervention
 
 * **A treatment group** a randomly selected group assigned to receive the intervention. It is possible to have multiple treatment groups in an RCT, one for each intervention. 
 
-* **Measurement**: The act of recording observations from the outcome variable
+* [**Measurement**](#measurement): The act of recording observations from the outcome variable
 
-* **data checking**: Checking data and distributions during a trial for consistency and quality
+* [**Data checking**](#data-checking): Checking data and distributions during a trial for consistency and quality
 
 These are combined into an RCT. An RCT will allow us to assign causality and determine the impact of an intervention if we hold every other variate constant. Let us examine each of these in turn. 
 
-### Randomisation in RCTs
+# Randomisation in RCTs
 
 Why do we randomize in an RCT? And why would we not want farmers to self-select whether they are treatment or control? It essentially comes down to eliminating **bias** and distributing **co-variates** equally. 
 
 Co-variates are factors that might influence your outcome variable, for example, farmer location, farmer income, soil type (etc). Bias, in proper statistics jargon, *means when your sample is substantially different from your popultion*. In an RCT we are assuming our sample is representative of our population, deviations from this assumption can lead us to an incorrect understanding of our population and generating conclusions that look robust but are actually invalid! The two types of bias we encounter at this stage of an RCT are:
 
-* Randomization bias - bias can be due to poor randomization resulting in *unbalanced T/C groups* (e.g. we have more control than treatment farmers in District X). 
+* **Randomization bias** - bias can be due to poor randomization resulting in *unbalanced T/C groups* (e.g. we have more control than treatment farmers in District X).
 
-* Selection bias - bias would also result if we were to allow farmers to assign themselves to T/C groups. This is because there might be an unobservable reason why farmers are choosing T/C groups. For example, wealthier farmers might have more risk appetite and therefore select themselves into treatment groups more, 
+<!---
+Randomization bias is more concerned with statistical balance than numerical balance, yes? Please clarify.
+--->
+
+* **Selection bias** - bias would also result if we were to allow farmers to assign themselves to T/C groups. This is because there might be an unobservable reason why farmers are choosing T/C groups. For example, wealthier farmers might have more risk appetite and therefore select themselves into treatment groups more, 
 
     * Both of these will lead to what is called **confounding bias**, this means it will be difficult to untangle effects that are due to poor randomization and effects that are due to the actual intervention.
     
@@ -96,6 +106,12 @@ Co-variates are factors that might influence your outcome variable, for example,
 * However, if each participant has an equal chance of being randomly assigned to a T/C group then randomization will be free of bias. This will result in both observable (e.g. farmer location) and un-observable co-variates (such as risk appetite) being spread equally to T and C groups. It is this spreading of co-variates that allows us to understand causality. 
 
 It is therefore important to select treatment and control groups *totally randomly*, the best way to achieve this is by letting R do the work for you, as in the below code:
+
+<!---
+I'd add a sentence that says something like, "continue to follow along with the code and comments below" so they know to read the comments as well. The comments are not intuitively where people look for the lesson to continue.
+
+I'd also elaborate on what set.seed is doing and how it makes the results replicable. This could be a good space for a learnr example to have them generate random numbers with and without seeds to see that they get consistent results. I'd really stress this as they could be in a bad place if they don't freeze their randomization with set.seed.
+--->
 
 ```{r sampling, comment=NA, warning=FALSE}
 
@@ -149,7 +165,17 @@ ggplot(df_new, aes(x=yield, fill=Status)) + geom_density(alpha=.3) + xlab("Yield
 
 They look pretty similar! So far so good, randomization has been successful.
 
-> Let's look at some examples of randomisation strategies below and try to decide whether they are proper or improper randomisation:
+<!---
+Add in a statistical test to evaluate balance. Visualizing them is a good start but not sufficient. What test should they use? How do they evaluate the test?
+
+What should they do if the groups are not balanced? What degree of balance is good or not good? 
+
+This is a good chance to illustrate the principle of p < 0.05 and type 1 error. If we're checking for balance on a large set of covariates, one of them is likely to be significant. That concept can segue into multiple hypothesis testing if you wanted.
+--->
+
+## Quick quiz
+
+Let's look at some examples of randomisation strategies below and try to decide whether they are proper or improper randomisation:
 
 1. Farmers are allowed to decide whether to be in a treatment or control group
 
@@ -178,15 +204,27 @@ Which of the above are truly randomized? Take a moment to think about this befor
 
 <button title="Click to show answer" type="button" onclick="if(document.getElementById('spoiler') .style.display=='none') {document.getElementById('spoiler') .style.display=''}else{document.getElementById('spoiler') .style.display='none'}">Show/hide</button>
 
+## Additional materials
 
-> Summary
+* [Trial design training](https://docs.google.com/presentation/d/14CpKbrEtFOzPfYTmfwKZgnpmANYbKC8YmX1ZxTRZsQs/edit)
+* [Randomization summary](https://drive.google.com/open?id=0B8h28h6EIayDWGpVa1hPcks2N3M)
 
-* **We must properly randomize farmers into treatment and control groups to eliminate confounding bias and ensure that the sample we have (which we actually observe) is representative of the population we care about. Furthermore, we must distribute co-variates equally to be able to draw conclusions about causality.**
+## Summary
 
-* **We achieve proper randomization by each and every farmer (or group or site) having an equal probability of being assigned to a treatment group. The best way to do this is by letting R do the work for you and using my RCT_random function above**. 
+* We must properly randomize farmers into treatment and control groups to eliminate confounding bias and ensure that the sample we have (which we actually observe) is representative of the population we care about. Furthermore, we must distribute co-variates equally to be able to draw conclusions about causality.
+
+* We achieve proper randomization by each and every farmer (or group or site) having an equal probability of being assigned to a treatment group. The best way to do this is by letting R do the work for you and using my RCT_random function above. 
 
 
-### Cluster randomised trials
+# Cluster randomised trials
+
+<!---
+I'd approach this instead from the place of, "but what if you are unable to randomize at the individual level?" Elaborate on examples of why that might not be possible due to logistical constraints (often if the FO is involved then it's a constraint). Your training example is a good start.
+
+Consider elaborating on spillover / contamination and why it matters for study design and inference.
+
+I still don't understand your point about not randomizing at the individual level. Are you referring to a specific set of treatments that we wouldn't randomize at the individual level? Farmers being in groups doesn't mean that we can't randomize individuals to receive SMS, for example. Individual randomization should mean being a T farmer is uncorrelated with any feature that lead farmers to be one group over another. It's obviously not relevant to non-OAF farmers that aren't in any group but will be internally valid. Can you explain more what you mean?
+--->
 
 Often at One Acre Fund we will be running *cluster randomised trials* rather than *randomised controlled trials*. The difference between these two trials lies in the  **unit of inference** and the **unit of randomisation**. A traditional RCT seeks to assign treatment and control status at the individual level, whilst a cluster RCT seeks to assign treatment and control at a cluster level. A **cluster** is any group of individuals with shared characteristics that cannot be randomized away, or where there is significant risk of *contamination* of control/treatment status.
 
@@ -210,34 +248,51 @@ kable(df[1:9,], format="markdown", align="c")
 
 ```
 
-In total we have `r dim(df)[1]` rows of data. Now let us summarize it by group_name:
+In total we have `r dim(df)[1]` rows of data. Now let us summarize it by group_name. I use the `dplyr` library to summarize the data. A couple notes on the code:
+
+* We need load `dplyr` to access the %>% function.
+* We call %>% "piping". We can pipe an object to a new function to simplify work and make the code easier to read.
+* We indent after each %>% to create a stack of actions that we are applying to the data. To learn more, read [the dplyr vingette](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
+* So below we are taking df and piping it to a function that will group our data by `group name`. Once we have grouped our data we will pipe it again to smmarize which will try to calculate the mean of the `Maize_yield` column in our dataframe. This final object is then saved as sum_df
 
 ```{r summy2, comment=NA, warning=FALSE, message=FALSE}
 
 
-library(dplyr) # we need this for the %>% 
-# we call %>% "piping"
-# we can pipe an object to a new function to simplify work
-# so below we are taking df and piping it to a function that will group our data by "group name". Once we have grouped our data we will pipe it again to smmarise_each which will try to calculate the mean of each column in our dataframe. This final object is then saved as sum_df
-sum_df = df %>% group_by(group_name) %>% summarise_each(funs(mean))
+library(dplyr) 
+sum_df <- df %>% 
+  group_by(group_name) %>% 
+  summarize(
+    yield.ave = mean(Maize_yield)
+  )
+  
 
 #kable makes a pretty table in r markdown HTMLs
 kable(sum_df, format="markdown", align="c")
 ```
 
-We now have the average maize yield for each of our four groups ("farmers_first", "farmers_second", "farmers_third", "farmers_last"). Note that we also have the "average" ID number, which is obviously nonsense, also note that our non-numeric columns (like District) have been replaced with NAs (as we cannot average characters). Finally, be aware that if one of our numeric columns were set to class "character" or class "factor" rather than class "numeric" then it would also fail to average them. 
+We now have the average maize yield for each of our four groups ("farmers_first", "farmers_second", "farmers_third", "farmers_last"). We have only directed R to summarize `Maize_yield` so we no longer have the other columns in our dataset. However, the other columns were `ID` and `District`. Taking the average of these variables would have been meaningless. Finally, be aware that if one of our numeric columns were set to class "character" or class "factor" rather than class "numeric" then it would also fail to average them. 
 
+<!---
+I'd prefer that you show them the full code for using summarize_each when there are character variables. You can show them the right code and say, "if we didn't include -c(District), district would show up as NA because it's a character."
+--->
 
 Note that we can also manually manipulate our data if we want to specifically create new metrics:
 
 ```{r manip2, warning=FALSE, message=FALSE, comment=NA}
 
-library(plyr)
+#library(plyr) 
 
 #this will take df and group it by "group name". It will then create a new metric called "average_yield" which is the mean of maize_yield. Likewise it will create a column called "stdev_yield" that will have our standard deviations
-sum_df2 <-  ddply(df, c("group_name"), summarise,  average_yield= mean(Maize_yield), stdev_yield= sd(Maize_yield))
 
-head(sum_df2)
+sum_df2 <- df %>%
+  group_by(group_name) %>%
+  summarize(
+    average_yield= mean(Maize_yield), 
+    stdev_yield= sd(Maize_yield)
+  ) %>% 
+  as.data.frame()
+
+kable(head(sum_df2))
                   
                   
 
@@ -246,9 +301,9 @@ head(sum_df2)
 
 This means that the sample size of 100 farmers in 4 groups is not 100! The reason is that under an RCT we assume that each individual has equal information gain, however, if farmer variables are correlated within groups then we already know something about the second farmer in the cluster just by examining the first farmer. This means the second farmer in our group has less information than the first, and so the third, fourth, fifth (etc) will have less information than each farmer preceding it. This drastically reduces our sample size because again, we violate the assumption of equal information for every individual. 
 
+## Quick quiz
 
-
-> Let's look at some trial hypotheses and decide what level (farmer, group, FO, district) we should randomise at:
+Let's look at some trial hypotheses and decide what level (farmer, group, FO, district) we should randomise at:
 
 1. Trialing incentives for Field officers to improve farmer repayment
 
@@ -272,7 +327,9 @@ Take a moment to think about this before expanding the answer below.
 
 <button title="Click to show answer" type="button" onclick="if(document.getElementById('spoiler2') .style.display=='none') {document.getElementById('spoiler2') .style.display=''}else{document.getElementById('spoiler2') .style.display='none'}">Show/hide</button>
 
-
+<!---
+You need to introduce ICC concept more. I'd also change the inputs to the ICC_CI function so they're more human friendly. Make X groupVar and y outcomeVar.
+--->
 
 If necessary, we can directly calculate the ICC value for a study to determine where to randomize, remember our un-summarized dataframe from earlier:
 
@@ -318,37 +375,75 @@ We can see from this calculation that our ICC between farmers in the same lendin
 
 In practice, at One Acre Fund we tend to assume an ICC of 1.0 and use the number of clusters (groups or sites) as the sample size (i.e. we calculate the sample size for the number of groups/sites needed, not the number of farmers). This is often the safest and easiest way to proceed. Using this method, our sample size for the above example would be only 4 (instead of 100). Sample size calculation methods with a determined ICC can be found in the upcoming FAQ. 
 
-> Summary:
+<!---
+This is not true. There's more nuance than you're presenting. ICC can guide to a more precise understanding of the balance between groups and observations within groups. 
 
-* **Cluster-level effects can compromise an RCT. It is important to randomize and analyze at the correct level!**
+Summarizing the data to the cluster level simplifies the analysis but that's not the only option. As I mentioned in the gDoc comments, I think you should explain how the intuition of the ICC is reflected in the analysis (clustering SD because otherwise SD can be artificially low). We're not required to summarize to the cluster level.
+--->
 
-* **You can estimate the ICC using historical data and my function to find the level at which ICC is lowest.**
+## Summary
 
-* **It is likely that almost all studies will be done at the group or FO level.** 
+<!----
+I've made summary a ## instead of > so that someone can jump straight to it
+--->
+
+* Cluster-level effects can compromise an RCT. It is important to randomize and analyze at the correct level!
+
+* You can estimate the ICC using historical data and my function to find the level at which ICC is lowest.
+
+* It is likely that almost all studies will be done at the group or FO level. 
 
 
-### The Hypothesis
+# Hypotheses
+
+<!---
+Move hypothesis before cluster RCT because it's relevant to both clustered and non-clustered RCTs? Your segue makes it seem like clusters is all we'll ever work with. Clustered RCTs is a subset of the RCT practice.
+--->
 
 Once we know how to randomize our clusters, we need a strong hypothesis to test. We will be testing our hypothesis by comparing our treatment and control groups. Each hypothesis has two parts:
 
-* Null hypothesis (H0) : The null hypothesis usually states that there is *no difference* between treatment and control groups
+* Null hypothesis (H0) : The null hypothesis usually states that there is *no difference* between treatment and control groups. (To put this another way, we're saying our treatment outcome average will be statistically *the same* as our control outcome average.)
 
-* Alternative hypothesis (H1): The alternative hypothesis states that *there is a difference* between treatment and control groups. 
+* Alternative hypothesis (H1): The alternative hypothesis states that *there is a difference* between treatment and control groups. (In other words, the treament outcome average will be statistically greater than or less than the control outcome average.)
 
 To give an example:
 
 * Null hypothesis: Farmer groups who adopt solar will not have a higher final repayment percentage. 
+
+<!---
+This is a tricky example because adopting solar is self selection. A trial hypothesis would be more along the lines of farmers that are given the chance to adopt a solar light....
+
+Maybe find another example that doesn't involve adoption? 
+
+I'd also tie the hypothesis to the randomization method because we start with our question and then randomize. Move hypothesis formation before randomization and show how if we have question A then we randomize like so, if we have question B, we might randomize like so. Feel free to reference the other materials I've linked you to.
+
+Hold over note from before: the hypotheses and randomization could all be at the individual level.
+--->
 
 * Alternative hypothesis: Farmer groups who adopt solar will have a higher final repayment percentage. 
 
 
 To test this, we will randomly assign some farmers to get solar, and some farmers to not get solar, and then measure the final percentage of loans repaid in each group. However, there are a number of ways we can test for differences between treatment and control groups, we could look for differences in group average repayment, median repayment, or maximum repayment. A good hypothesis, therefore, will state what difference we are looking for (note that this hypothesis will need to be paired to an appropriate hypothesis test - lesson 3). 
 
+<!---
+Are you certain you can compare median outcomes from an RCT? I haven't seen an example of that.
+--->
+
 An example of a good hypothesis:
 
 * **H0: Groups with a higher adoption percentage of solar lights will have no difference in average percentage repaid by the end of the season**
 
+<!---
+What is a higher adoption percentage? Isn't that self selection? Which farmers are we talking about? In which country and district?
+These need to be stronger examples. I want people writing more exact hypotheses about where and with whom we expect change to occur.
+See this presentation on writing hypotheses for ideas: https://drive.google.com/a/oneacrefund.org/file/d/0B8h28h6EIayDSk1SUTZ4NHktY2s/view?usp=sharing
+--->
+
 * **H1: Groups with a higher adoption percentage of solar lights will have a higher average percentage repaid at the end of the season**
+
+<!---
+Do you want to introduce one way and two way hypothesis testing? This is a one way hypothesis, we can optimize sample size and power if we set up one way comparisons instead of two, etc.
+---->
 
 Note that it is a clear and simple hypothesis, it is easily testable (by distributing solar lights randomly) and specifies *how* we will test for differences (group level average repayment). 
 
@@ -359,6 +454,8 @@ A bad hypothesis example would be be:
 * **H1: Ladybugs are a good natural pesticide for treating aphid infected plants **
 
 Why is this so bad? Take a moment to think before expanding the answer below:
+
+## Quick quiz
 
 <div id="spoiler3" style="display:none">
 
@@ -373,18 +470,23 @@ Why is this so bad? Take a moment to think before expanding the answer below:
 
 <button title="Click to show answer" type="button" onclick="if(document.getElementById('spoiler3') .style.display=='none') {document.getElementById('spoiler3') .style.display=''}else{document.getElementById('spoiler3') .style.display='none'}">Show/hide</button>
 
-A final example of a bad hypothesis and bad thought pattern is the "untestable hypothesis". This is a hypothesis that cannot be disproved, or that constantly changes to have new criteria. A common example of this at One Acre Fund is:
+<!---
+I'd focus instead on good examples of strong hypotheses. I removed the untestable hypothesis example.
+--->
 
-* **There was bad rainfall in 2016 which caused poor farmer repayment through expected psychological stress**
+## Summary
 
-Note that the way this is phrased means it is impossible to evaluate scientifically:
+* An RCT requires a clear and well defined hypothesis that is testable. Often a hypothesis will start with a question ("What does solar do to repayment?"), it is the role of the analyst to convert this question into a robust hypothesis with an agreed method of testing. 
 
-* Bad rainfall is a poorly defined term and it allows switching of definitions to maintain the hypothesis if presented with contradictory evidence
+* Once we have a hypothesis we need an estimate of the effect size we expect to see, this estimate is directly relevant to sample size calculations (remember a small sample size that is too small makes your results unreliable!). Our estimate can come from historical One Acre Fund data or from well-regarded literature (e.g. from peer-reviewed publications). 
 
-* We cannot observe a farmer's expected stress in 2016, which means we have no way of collecting evidence to prove or disprove this hypothesis. 
+# Hypothesis testing
 
-Hopefully it is clear that this hypothesis is untestable, and therefore useless for improving our program. 
+<!---
+If you're not showing much code on how to set up hypothesis tests, do you just want to save this for the next lesson? Right now it doesn't give the reader much actionable to do.
 
+If you want to keep it, I'd flesh out the exact sections on hypothesis testing from lesson 1 you want people to focus on and how they would relate to the hypothesis examples and randomization examples you've given above.
+--->
 
 Once we have a testable hypothesis and a metric (see below), we will use a hypothesis test to detect differences in the underlying populations represented by our control and treatment samples [AMP lesson 1](https://michael-bar.github.io/AMP-1-distributions/AMP_distributions_lesson.html#). A hypothesis test will yield a P-value, which is the probability that the populations behind our samples are different. When using a hypothesis test we must set an acceptable level of risk. The acceptable level of risk is known as the p-value threshold, or the alpha level. The most common p-value threshold is 0.05. This means that we are willing to accept a 5% risk of rejecting the null hypothesis incorrectly. In other words, 5% of the time we will conclude there is no difference between our treatments when in fact there is. 
 
@@ -395,15 +497,15 @@ The principles of power and sample size, that we covered in [AMP lesson 1](https
 It is possible to skip a hypothesis test and proceed directly to regression results (lesson 3). However it is a good sanity check to make sure that our regression results match our hypothesis test in an RCT. If these results do not match then it suggests that our RCT was designed poorly. 
 
 
-> Summary
-
-* An RCT requires a clear and well defined hypothesis that is testable. Often a hypothesis will start with a question ("What does solar do to repayment?"), it is the role of the analyst to convert this question into a robust hypothesis with an agreed method of testing. 
-
-* Once we have a hypothesis we need an estimate of the effect size we expect to see, this estimate is directly relevant to sample size calculations (remember a small sample size that is too small makes your results unreliable!). Our estimate can come from historical One Acre Fund data or from well-regarded literature (e.g. from peer-reviewed publications). 
+## Summary
 
 * We must also set a threshold for our P-value. This threshold represents the level of risk we are willing to accept in being wrong. Note that being more stringent (i.e. lower thresholds) will require a larger sample size!
 
-### Measurements
+# Measurement
+
+<!---
+As you say, chronologically, measurement precedes hypothesis testing. I'd move this ahead of hypothesis testing.
+--->
 
 The final part of the RCT is the measurement itself. This is an often neglected part of RCT design and so usually the source of most problems later on. A hypothesis needs to have a good measurement strategy to be useful. 
 
@@ -421,11 +523,14 @@ Our first ideas might be:
 
 * Daily spend diary kept by the farmers outlining where they spend their money every day. We then collect the diary after the trial
 
-
+<!---
+Add another quiz section to prompt readers to think about why these may not be good options.
+Add more ideas for them to test?
+--->
 
 But both these ideas might suffer from the same bias as my airtime study anecdote. This kind of bias is known as **measurement bias** and might arise because some farmers are more forgetful than others, or because some farmers feel social pressure to inflate/deflate their numbers. In this case it requires some careful thought about how to obtain meaningful data. 
 
-How would you improve this trial so the data was more robust (feel free to email ideas to me at Mike.Barber@)?
+How would you improve this trial so the data was more robust (feel free to email ideas to me at [Mike.Barber@](mailto: mike.barber@oneacrefund.org))?
 
 My thoughts so far:
 
@@ -435,15 +540,20 @@ My thoughts so far:
 
 * We could compare answers given to enumerators with third-party data, such as government census data. 
 
-There are no easy answers to this question, and the solution is likely to be highly dependent on the question being asked and the country it is asked in. 
+For more materials on the importance of good measurement and measurement strategies in an RCT context, see [teh PRB Trial design guide](https://drive.google.com/open?id=0B8h28h6EIayDOFRHTUFIRXZzbG8)
 
-#### Pre-test, Pre-test and Pre-test again
+There are no easy answers to this question, and the solution is likely to be highly dependent on the question being asked and the country it is asked in. However, there is an option available to us to test our data collection methods before we launch a survey called pre-testing.
+
+<!---
+Add more details on why even these ideas might not be good? ie. too expensive to visit people each week?
+
+What do you want people to do after reading this section? How are you leading them to better measurement practices? In many ways, pre-testing is the answer because it shows us how our questions or methods might not be useful.
+--->
+## Pre-test, Pre-test and Pre-test again
 
 Once we have a robust question, and a strategy to measure answers, we will want to **pre-test** the survey.
 
-I cannot emphasize the importance of pre-testing questions enough. Pre-testing is the
-process through which we draft questions, ask real farmers those questions and assess the extent to which the
-question elicited the intended response. When pre-testing, we want to consider:
+I cannot emphasize the importance of pre-testing questions enough. Pre-testing is the process through which we draft questions, ask real farmers those questions and assess the extent to which the question elicited the intended response. When pre-testing, we want to consider:
 
 * Are the questions on the survey understood easily by farmers? 
 
@@ -461,7 +571,13 @@ The final key to great measurement is knowing how the data will be collected and
 
 At a minimum, I would expect all data to be well organized and available on the One Acre Fund Google drive folder. Likewise I would expect all analysis scripts to be deposited in the same folder and clearly linked to the raw data (we will cover this more in future lessons). 
 
-> Summary
+See [Data Management Principles](https://drive.google.com/a/oneacrefund.org/file/d/0B8h28h6EIayDb3cyM1BTSDAtREE/view?usp=sharing) for additional information and guidance.
+
+## Summary
+
+<!---
+Say more than think about how to get robust data and measurement. Point to specific practices you want people to follow. Preview the data checking you go on to discuss
+--->
 
 * Think about how to get robust and reliable data. Think about how to make sure we can trust the data.
 
@@ -469,16 +585,24 @@ At a minimum, I would expect all data to be well organized and available on the 
 
 * Have a clear plan for where to store raw data and scripts. We need this to be accessible to other One Acre Fund analysts to preserve your work for future staff!
 
+<!---
+Have you mentioned scripts? Will it be clear what you mean?
+--->
 
-### Data checking
+
+# Data checking
 
 During the course of the RCT it is important to check data as it comes in. This will enable you to identify any issues early on and (hopefully) fix them before they become chronic. During data checking we are looking to see whether our survey is capturing the data expected. Some One Acre Fund examples of where this has been useful:
 
-* Plot measurements by enumerators showing a total acreage of 0.001 acres
+* Plot measurements by enumerators showing a total acreage of 0.001 acres. This is likely an enumeration or data validation error.
 
-* Questions abour fertiliser use being answered both in kilograms and Kenyan Shillings.
+* Questions abour fertiliser use being answered both in kilograms and Kenyan shillings.
 
 In these cases we are really enquiring about **outliers**.
+
+<!----
+It's outliers and it's data entry errors. I think we're concerned about both. An outlier can be a true outlier but a real value. A mistake is just a mistake though. We want to follow up with both.
+--->
 
 An outlier is a data point which lies outside the main distribution and may signal data recorded or entered incorrectly. The problem with outliers is trying to distinguish real data that is just unexpected (but is valid) and data which is incorrect due to enumerator survey error. 
 
@@ -500,6 +624,14 @@ ggplot(df) +  geom_beeswarm(aes(x=1,y=vals)) + ggtitle("Beeswarm of simulated da
 ```
 
 We can also try to define outliers mathematically, the boxplot uses a simple formula to identify potential outliers, I have included a function below that will use this logic to find outliers for numerical values:
+
+<!---
+I'd explain the function and show how to apply it to multiple columns in the data. 
+What sort of output are they looking for? 
+Does this work for all variables regardless of distribution?
+
+In addition to putting these functions in the AMP lessons, if you want these to be the functions people use, I'd start loading them to a github 'analysis' repo from which analysts can just devtools::github_install(repo_url) and have all the functions available to them.
+--->
 
 ```{r out2}
 
@@ -523,23 +655,21 @@ These tools can help us identify potential outliers but cannot definitively tell
 
 If we are confident that a value is mistaken (and not just a true extreme) then we can replace that value with NA, to indicate that it is missing. This will mean subsequent calculations will be done without that value. 
 
-There is no easy solution to this, and often it will be contextual knowledge which we use to identify real outliers, for example, it is likely that a farmer reporting 10000 Kg of fertilizer per acre is actually a case of enumerator error. You can read more about outliers [here](https://drive.google.com/file/d/0Bz09wJM9mJC_M2kwZUIzSmFzNlE/view)
+There is no easy solution to this, and often it will be contextual knowledge which we use to identify real outliers, for example, it is likely that a farmer reporting 10000 Kg of fertilizer per acre is actually a case of enumerator error. You can read more about outliers [here](https://drive.google.com/file/d/0Bz09wJM9mJC_M2kwZUIzSmFzNlE/view) and [here](https://oneacrefund.igloocommunities.com/teams/global/agresearch/documents/forms/analyst_mentorship_program/amp_lesson_2pdf)
 
-> Summary
+## Summary
 
 * Data checking ensures that come analysis time, our data is free from outliers and issues
 
 * Outliers are often difficult to define - remember the 68-95-99.7 rule from lesson 1. In a normal distribution of values we expect 68% of the values to be within 1 stdev of the mean. 95% to be within 2 stdev and 99.7% to be within 3 stdev of the mean. This means we can have fairly extreme values that are still well within what we expect for a normal distribution. 
 
-* 
-
-# Lesson Summary
+# Summary
 
 We have now seen the key parts of an RCT:
 
-* **Randomization**: We must randomize using R and ensuring our Treatment and Control groups are balanced. We can use my RCT_random function to achieve this. We must also remember cluster effects and use the correct *unit of randomization*. It is possible to calculate the ICC and adjust sample size accordingly, it is also fair to assume an ICC of 1.0 and have the sample size calculated from the number of clusters (i.e. calculate the number of groups rather than individuals).
-
 * **Hypothesis**: A good hypothesis is *testable* and *measurable*. It must have a clearly defined evaluation criteria (e.g. are we measuring the average or the median? At the individual or group level?). 
+
+* **Randomization**: We must randomize using R and ensuring our Treatment and Control groups are balanced. We can use my RCT_random function to achieve this. We must also remember cluster effects and use the correct *unit of randomization*. It is possible to calculate the ICC and adjust sample size accordingly, it is also fair to assume an ICC of 1.0 and have the sample size calculated from the number of clusters (i.e. calculate the number of groups rather than individuals).
 
 * **Power**: Know your statistical power and sample size before and after a trial - see [AMP lesson 1](https://michael-bar.github.io/AMP-1-distributions/AMP_distributions_lesson.html#). We will need an estimate of effect size from historic data or peer-reviewed literature. 
 
@@ -550,11 +680,11 @@ We have now seen the key parts of an RCT:
 * Combining lesson 1 (distributions, powers, p-values) and lesson 2 (RCT principles) should now mean you are able to start designing RCTs! Our next few lessons will look at how to analyse data effectively using hypothesis testing and regressions. 
 
 
-# Optional reading
+# Additional reading
 
 * [The RCT vs. other trials at One Acre Fund](https://docs.google.com/presentation/d/14CpKbrEtFOzPfYTmfwKZgnpmANYbKC8YmX1ZxTRZsQs/edit#slide=id.p4)
 
-* [Effective Hypothesis design](https://www.producttalk.org/2014/11/the-5-components-of-a-good-hypothesis)
+* [Effective hypothesis design](https://www.producttalk.org/2014/11/the-5-components-of-a-good-hypothesis)
 
 * [Self-reporting pitfalls (reccomended!)](http://www.sciencebrainwaves.com/the-dangers-of-self-report/)
 
