@@ -234,7 +234,7 @@ div.tocify {
 <h1 class="title toc-ignore">AMP - distributions</h1>
 <h3 class="subtitle"><em>Understanding distributions for RCT analysis</em></h3>
 <h4 class="author"><em><a href="mailto:mike.barber@oneacrefund.org">Michael Barber</a></em></h4>
-<h4 class="date"><em>13 December, 2017</em></h4>
+<h4 class="date"><em>18 December, 2017</em></h4>
 
 </div>
 
@@ -673,6 +673,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>It is important that we use the correct power calculation in much the same way it is important we use the right hypothesis test. Power calculations are dependent on the data distribution and the most common power calculator used in R is fine for normally distributed data. This calculator requires an “effect size” which is a simple way to measure the effect of a treatment. The effect size is basically the difference in means between samples divided by the standard deviation of the samples. This means the units are in standard deviations. So an effect size of 1 means the data has shifted over an amount equal to 1 standard deviation. I have included a function below to calculate effect sizes using the Cohen’s D equation:</p>
 <p>(Expand this code block)</p>
 <pre class="r"><code>cohen_d &lt;- function(d1,d2) {  
+  
   m1 &lt;- mean(d1, na.rm=TRUE)
   m2 &lt;- mean(d2, na.rm=TRUE)
   s1 &lt;- sd(d1, na.rm=TRUE)
@@ -764,6 +765,7 @@ ggplot() + geom_ribbon(aes(x=sample_sizes, ymin= power_lw, ymax=power_hi), alpha
 <p>I’ve made a function below (“MCpower”) which will calculate the power for a non-normal distribution. It requires data (or expected data) for samples 1 and 2 (treatment and control) and a sample size (the “size” argument).</p>
 <p>Please make sure you understand this code and are comfortable using it (expand the code box below to see the function)</p>
 <pre class="r"><code>MCpower = function(sample1, sample2, size) {
+  
   reps = 1000
     results  &lt;- sapply(1:reps, function(r) {
         resample1 &lt;- sample(sample1, size=size, replace=TRUE) 

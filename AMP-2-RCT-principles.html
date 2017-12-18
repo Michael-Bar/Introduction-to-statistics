@@ -377,11 +377,11 @@ Show/hide
 <p>It is therefore important to select treatment and control groups <em>totally randomly</em>, the best way to achieve this is by letting R do the work for you. I have included a function below that will do this for you. Please note the use of the set.seed function - we will be using random numbers to assign our groups to Treatment/Control status and so set.seed will make this random-ness reproducible both by you and another analyst.</p>
 <p>If we draw three numbers randomly without setting the seed:</p>
 <pre class="r"><code>rnorm(1,50,10)</code></pre>
-<pre><code>[1] 56.16593</code></pre>
+<pre><code>[1] 51.1744</code></pre>
 <pre class="r"><code>rnorm(1,50,10)</code></pre>
-<pre><code>[1] 62.57198</code></pre>
+<pre><code>[1] 52.15579</code></pre>
 <pre class="r"><code>rnorm(1,50,10)</code></pre>
-<pre><code>[1] 49.03256</code></pre>
+<pre><code>[1] 55.62233</code></pre>
 <p>Now if we randomly draw three numbers but set the seed to be identical each time:</p>
 <pre class="r"><code>set.seed(111)
 rnorm(1,50,10)</code></pre>
@@ -401,6 +401,7 @@ df = data.frame(&quot;OAFID&quot;=seq(1,1000), &quot;yield&quot;=rnorm(1000))
 # Options might be &quot;treatment&quot; and &quot;control&quot;, or if there are more than 2 options then it might be &quot;Control&quot;, &quot;treatment1&quot;, &quot;treatment2&quot;, or &quot;control&quot;, &quot;sunking home&quot;, &quot;sunking pro&quot;
 #note you will need to copy this bit directly below for it to work in your code
 RCT_random = function(dataframey, values_to_add){
+  
   set.seed(111)
   dataframey$values_to_add[sample(1:nrow(dataframey), nrow(dataframey), FALSE)] &lt;- rep(values_to_add)
   colnames(dataframey)[which(colnames(dataframey)==&quot;values_to_add&quot;)] = &quot;Status&quot;
@@ -542,6 +543,7 @@ kable(df[1:5,], format=&quot;markdown&quot;, align=&quot;c&quot;)</code></pre>
 #it needs two character strings, x and y, which are the group level and the outcome variable column names in &quot;&quot;
 # it also needs the dataframe which has column names x y
 ICC_CI &lt;- function(cluster_level,outcomevar, dataf){
+  
   #load library
 require(ICC)
   set.seed(123)
@@ -698,23 +700,25 @@ kable(head(sum_df2))</code></pre>
 <pre class="r"><code>ICC_correction &lt;- function(samplesize, num_clusters, ICC_estimate){
   
   
+  
   average_cluster_size = samplesize/num_clusters
   
   factor_inflate = 1 + (average_cluster_size - 1) * ICC_estimate
   
-  return(round(samplesize*factor_inflate))
+  return(data.frame(&quot;New sample size&quot;=round(samplesize*factor_inflate), &quot;Old sample size&quot;=samplesize   ))
   
   
 }
 
 ICC_correction(200, 50, 0.2)</code></pre>
-<pre><code>## [1] 320</code></pre>
-<pre class="r"><code>new_sample_size &lt;- ICC_correction(200, 30, 0.2)</code></pre>
-<p>So an initial sample size of <code>200</code> farmers, with 30 clusters and an ICC of <code>0.2</code> would lead to a new sample size of <span class="math inline">\(427\)</span>.</p>
+<pre><code>##   New.sample.size Old.sample.size
+## 1             320             200</code></pre>
+<pre class="r"><code>new_sample_size &lt;- ICC_correction(200, 50, 0.2)$New.sample.size</code></pre>
+<p>So an initial sample size of <code>200</code> farmers, with 30 clusters and an ICC of <code>0.2</code> would lead to a new sample size of <span class="math inline">\(320\)</span>.</p>
 <p>Note that adding additional clusters (rather than new farmers in existing clusters) is a more efficient way to increase statistical power without massive adjustments to sample size. For example:</p>
-<pre class="r"><code>scenario1 &lt;- ICC_correction(200,20,0.2) #average 10 farmers per cluster, and  20 clusters
+<pre class="r"><code>scenario1 &lt;- ICC_correction(200,20,0.2)$New.sample.size #average 10 farmers per cluster, and  20 clusters
 
-scenario2 &lt;- ICC_correction(200,40,0.2) # average 5 farmers per cluster, and 40 clusters</code></pre>
+scenario2 &lt;- ICC_correction(200,40,0.2)$New.sample.size # average 5 farmers per cluster, and 40 clusters</code></pre>
 <p>We can see that halving the ICC leads to a reduction in corrected sample size from <code>scenario1= 560</code> to <code>scenario2= 360</code>.</p>
 <p>I have made a function below that will plot the relationship between adding farmers from new clusters vs. existing clusters. The function takes the original (non corrected) sample size and the number of clusters as arguments, and then plots the scenario where farmers are added to an existing cluster vs new clusters. You can use this function to examine the expected gains from adding farmers at various levels, and to gauge how to cost-effectively increase sample size.</p>
 <pre class="r"><code># starting size is the uncorrected sample size
@@ -724,6 +728,7 @@ scenario2 &lt;- ICC_correction(200,40,0.2) # average 5 farmers per cluster, and 
 # maxim limits the number of new farmers added 
 
 ICC_groups &lt;- function(starting_size, nclusters, ICCval, add_size, maxim){
+  
   add_c &lt;- c()
   expand_c &lt;-c()
   
@@ -734,8 +739,8 @@ ICC_groups &lt;- function(starting_size, nclusters, ICCval, add_size, maxim){
     nclusters &lt;- as.numeric(nclusters)
     sizes = starting_size+(i*add_size)
     clustersplus = nclusters+i
-    add_c[[i]] &lt;- ICC_correction(sizes,nclusters+i,ICCval)
-    expand_c[[i]] &lt;- ICC_correction(sizes,nclusters,ICCval)
+    add_c[[i]] &lt;- ICC_correction(sizes,nclusters+i,ICCval)$New.sample.size
+    expand_c[[i]] &lt;- ICC_correction(sizes,nclusters,ICCval)$New.sample.size
   }
   
   library(ggplot2)
@@ -858,6 +863,7 @@ dat &lt;- data.frame(&quot;av monthly expenses&quot; = rnorm(1000,100,10))
 #this function will plot MDE for various differences
 # differs is a list of intervention effects that you want to consider
 plot_MDE &lt;- function(historical_data, differs){
+  
   #initialise empty vec
 p &lt;- c()
 
@@ -1044,6 +1050,7 @@ ggplot(df) +  geom_beeswarm(aes(x=1,y=vals)) + ggtitle(&quot;Beeswarm of simulat
 <p>We can also try to define outliers mathematically, the boxplot uses a simple formula to identify potential outliers, I have included a function called <code>find_outliers</code> below that will use this logic to find outliers for numerical values from many distribution types. The function will use the inter-quartile ranges to define a cutoff. It will then present the suspected outliers to the user so that a decision can be made on what to do:</p>
 <pre class="r"><code>#this function expects a vector of numeric values
 find_outliers &lt;- function(data_to_test){
+  
 
       IQR&lt;- quantile(data_to_test, 0.75, na.rm=TRUE)[[1]] - quantile(data_to_test, 0.25, na.rm=TRUE)[[1]]
       cutoff = subset(data_to_test, data_to_test &lt;=  quantile(data_to_test, 0.25, na.rm=TRUE)-(IQR*1.5) )  
