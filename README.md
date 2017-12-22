@@ -9,8 +9,6 @@ My Analyst Mentorship Program - designed to improve OAF analysts skillsets quick
 
 ## [Lesson 4 - Logistic regression](https://michael-bar.github.io/Introduction-to-statistics/AMP4_RCT_analysis_p2.html)
 
-## [Lesson 5 - Advanced statistical concepts](https://michael-bar.github.io/Introduction-to-statistics)
+## [Lesson 5 - Advanced statistical concepts](https://michael-bar.github.io/Introduction-to-statistics/AMP5-summary.html)
 
-## [Lesson 6 - Reproducible writing, R-Markdown](https://michael-bar.github.io/Introduction-to-statistics)
-
-## [Lesson 7 -CommCare and GitHub](https://michael-bar.github.io/Introduction-to-statistics)
+## [Lesson 6 - Reproducible writing, R-Markdown, GitHub](https://michael-bar.github.io/Introduction-to-statistics)
