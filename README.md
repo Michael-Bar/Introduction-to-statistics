@@ -1,6 +1,8 @@
 # Introduction to statistics
 
-This is my short course on statistics. I built this course for One Acre Fund to quickly train data analysts and data scientists in basic statistical concepts (in a maths-lite fashion). Working through lessons 1-5 (and the associated homeworks) should provide a good intuitive overview of the statistics required for social science trial analysis. 
+This is my short introduction to statistics. I designed and built this course for [One Acre Fund](https://oneacrefund.org/) to quickly train their data analysts and data scientists in basic statistical concepts that are vital to trial design and analysis. Due to the atypical background of One Acre Fund analysts, this course is designed to be as math-lite as possible. The aim of this course is therefore to build a kind of statistical *intuition* and statistical critical thinking. 
+
+At the end of this course, the reader should be able to oversee, design, and analyse a variety of trials important in impact-evaluation and product innovation. 
 
 ## [Lesson 1 - Distributions](https://michael-bar.github.io/Introduction-to-statistics/AMP-1-distributions.html#)
 
