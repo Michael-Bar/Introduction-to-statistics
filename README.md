@@ -4,7 +4,7 @@ This is my short introduction to statistics. I designed and built this course fo
 
 At the end of this course, the reader should be able to oversee, design, and analyse a variety of trials important in impact-evaluation and product innovation. 
 
-## [Lesson 1 - Distributions](https://michael-bar.github.io/Introduction-to-statistics/AMP-1-distributions.html#)
+## [Lesson 1 - Distributions, power and sample size](https://michael-bar.github.io/Introduction-to-statistics/AMP-1-distributions.html#)
 
 **Highlights:**
 * Interpreting and plotting distributions 
@@ -14,7 +14,7 @@ At the end of this course, the reader should be able to oversee, design, and ana
 * Monte-Carlo methods for non-parametric power calculations
 
 
-## [Lesson 2 - Principles of randomised controlled trials](https://michael-bar.github.io/Introduction-to-statistics/AMP-2-RCT-principles.html)
+## [Lesson 2 - intra-cluster correlation and effective trial design](https://michael-bar.github.io/Introduction-to-statistics/AMP-2-RCT-principles.html)
 
 **Highlights:**
 * Formulating effective hypotheses
@@ -23,7 +23,7 @@ At the end of this course, the reader should be able to oversee, design, and ana
 * P-value thresholds (aka alpha levels)
 * Using minimum detectable effects in sample size calculations
 
-## [Lesson 3 - Linear regression and hypothesis testing](https://michael-bar.github.io/Introduction-to-statistics/AMP-3-regressions_NHT.html)
+## [Lesson 3 - Linear regression and mixed effect models](https://michael-bar.github.io/Introduction-to-statistics/AMP-3-regressions_NHT.html)
 
 **Highlights:**
 * Analysing cluster randomized trials 
