@@ -1,6 +1,8 @@
 # Introduction to statistics
 
-This is my short introduction to statistics. I designed and built this course for [One Acre Fund](https://oneacrefund.org/) to quickly train their data analysts and data scientists in basic statistical concepts that are vital to trial design and analysis. Due to the atypical background of One Acre Fund analysts, this course is designed to be as math-lite as possible. The aim of this course is therefore to build a kind of statistical *intuition* and statistical critical thinking. 
+This is my short introduction to statistics. It is published under Creative Commons license CC BY-NC. You can use this work non-commercially, but credit must be given, and there is no allowance for commercial use.
+
+I designed and built this course for [One Acre Fund](https://oneacrefund.org/) to quickly train their data analysts and data scientists in basic statistical concepts that are vital to trial design and analysis. Due to the atypical background of One Acre Fund analysts, this course is designed to be as math-lite as possible. The aim of this course is therefore to build a kind of statistical *intuition* and statistical critical thinking. 
 
 At the end of this course, the reader should be able to oversee, design, and analyse a variety of trials important in impact-evaluation and product innovation. 
 
